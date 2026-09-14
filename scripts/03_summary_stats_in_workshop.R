@@ -2,22 +2,30 @@ library(tidyverse)
 library(janitor)
 library(skimr)
 
-pine_df <- read_csv("data/pine_data copy.csv")
+install.packages("palmerpenguins")
+data(package = 'palmerpenguins')
 
+help(palmerpenguins)
+pine_df <- read_csv("data/pine_data copy.csv")
+penguins()
 skim(pine_df)
 unique(pine_df$side)
-pine_df <- pine_df %>% mutate(side = tolower(side)) %>% 
+pine_df %>% filter(side == "")
+
+
+pine_df <- pine_df %>%
+  mutate(side = tolower(side)) %>%
   mutate(side = if_else(side == "shade", "shady", side))
 
 
 shady_df <- pine_df %>% filter(side == "shady")
 sunny_df <- pine_df %>% filter(side == "sunny")
 
-shady_stat <- shady_df %>% 
+shady_stat <- shady_df %>%
   summarize(
     mean = mean(needle_length_mm),
     median = median(needle_length_mm)
-  ) %>% 
+  ) %>%
   mutate(side = "shady")
 
 sun_stat <- sunny_df %>%
@@ -71,7 +79,7 @@ mean_df %>%
 mean_df %>%
   ggplot(aes(side, needle_length_mm)) +
   geom_boxplot() +
-  geom_point((aes(color = team), position = position_dodge(width = 0.3))) +
+  geom_point(aes(color = team), position = position_dodge(width = 0.3)) +
   geom_line(
     aes(color = team, group = team),
     position = position_dodge(width = 0.3)

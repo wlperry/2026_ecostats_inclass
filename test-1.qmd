@@ -1,0 +1,16 @@
+---
+title: "homework"
+format: html
+---
+
+# asdfasdf
+
+## asdf
+
+Here is a plot
+
+```{r}
+library(tidyverse)
+cars %>% ggplot(aes(speed, dist))+
+geom_point()
+```
