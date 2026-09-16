@@ -23,7 +23,7 @@ library(tidyverse)
 g_df <- read_csv("data/05_probability/gray_I3_I8.csv")
 
 i3_df <- g_df %>% filter(lake == "I3")
-
+i8_df <- g_df %>% filter(lake == "I8")
 head(g_df)
 
 
@@ -117,12 +117,12 @@ i3_df %>%
 
 #    Part 3.2 · Z-Scores ------------
 within_1sd <- mean(abs(i3_df$z_score) <= 1, na.rm = TRUE)
-round_half_up(100 * within_1sd, 1)
+round_half_up(100 * within_1sd, 3)
 
 #    Part 4.1 · Area Under the Curve ------------
-pnorm(1.96) # area to the LEFT of 1.96
+pnorm(2) # area to the LEFT of 1.96
 1 - pnorm(1.96) # area to the RIGHT
-qnorm(0.975) # the z with 97.5% to its left - the inverse of pnorm
+qnorm(0.978) # the z with 97.5% to its left - the inverse of pnorm
 
 
 #    Part 4.2 · Area Under the Curve ------------
@@ -150,13 +150,14 @@ i3_df %>%
   geom_vline(xintercept = 300, colour = "red", linetype = "dashed")
 
 #    Part 5.1 · Checking the Assumption ------------
-shapiro.test(i3_df$length_mm)
+
+shapiro.test(i8_df$length_mm)
 
 
-qqnorm(i3_df$length_mm, main = "Q-Q Plot: length_mm")
-qqline(i3_df$length_mm, col = "red", lwd = 2)
+qqnorm(i8_df$length_mm, main = "Q-Q Plot: length_mm")
+qqline(i8_df$length_mm, col = "red", lwd = 2)
 
-i3_df %>%
+i8_df %>%
   ggplot(aes(sample = length_mm)) +
   stat_qq() +
   stat_qq_line(colour = "red") +
@@ -220,8 +221,18 @@ tibble(
 )
 
 #    Part 7.1 · One-Sample t-Test ------------
-t.test(i3_df$length_mm, mu = 260)
+t.test(i3_df$length_mm, mu = 3200)
+help(t.test)
 
+g_df %>%
+  ggplot(aes(lake, length_mm)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2) +
+  stat_summary(fun = mean, geom = "point", color = "red", size = 4)
+
+g_df %>%
+  ggplot(aes(x = length_mm)) +
+  geom_histogram(aes(color = lake))
 
 #    Part 8.1 · Two-Sample t-Test ------------
 t.test(length_mm ~ lake, data = g_df, alternative = "less")
