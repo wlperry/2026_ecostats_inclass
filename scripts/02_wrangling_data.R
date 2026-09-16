@@ -1,12 +1,9 @@
 # install packages so we can use them
 # install.packages("tidyverse")
-
 library(tidyverse)
 
-pine_df <- read_csv("data/pine_data.csv")
-
-
-write_csv(pine_df, "output/pine_data.csv")
+pine_df <- read_csv("data/01_04_pine_needles/pine_data.csv")
+write_csv(pine_df, "output/pine/pine_data.csv")
 
 # part 2 Filter
 pine_csv_df <- pine_df %>%
